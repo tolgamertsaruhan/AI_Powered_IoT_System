@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Sensor & Audio Prediction</title>
+    <style>
+        .sensor-scroll {
+            max-height: 500px; /* Adjust as needed */
+            overflow-y: auto;
+            padding-right: 0.5em;
+            margin-top: 0.5em;
+        }
+
+        .version-log {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            padding: 1em;
+            font-size: 0.9em;
+            z-index: 1000;
+        }
+
+        .version-log h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.3em;
+        }
+
+        .version-log ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .version-log li {
+            margin: 0.3em 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            padding: 0;
+            margin: 0;
+            background: #f0f0f0;
+        }
+        header {
+            text-align: center;
+            font-size: 3em; /* REALLY big */
+            font-weight: 900;
+            padding: 1em 0;
+            background: #333;
+            color: white;
+            letter-spacing: 1px;
+        }
+        .container {
+            display: flex;
+            gap: 2em;
+            align-items: flex-start;
+            padding: 2em;
+        }
+        .box {
+            background: white;
+            padding: 1em 1.5em;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        .sensor-entry {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        .kv {
+            margin: 0.25em 0;
+        }
+        .filename {
+            font-size: 0.9em;
+            color: #888;
+        }
+        .warning-box {
+            background: #ffeaea;
+            border: 2px solid #ff5c5c;
+            color: #b80000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .warning-gif {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1em;
+            min-width: 300px; /* new */
+            max-height: 300px;
+        }
+
+        
+    </style>
+</head>
+<div class="version-log">
+    <h3>Version Log</h3>
+    <ul>
+        <li><strong>v4.7.2</strong> - Added warning images for crows</li>
+        <li><strong>v3.1.4</strong> - Increased True Positive rate by adding YAMNET sound classification</li>
+        <li><strong>v2.2.17</strong> - Added Wildlife Control option with speakers</li>
+        <li><strong>v1.3</strong> - Introducing Smart Stick™️ Project</li>
+        <li><strong>v0.1</strong> - Local Weather Prediction Idea</li>
+    </ul>
+</div>
+
+<body>
+
+    <header>SMART STICK™️ THUNDER DASHBOARD ⚡️✨ v4.7.2</header>
+
+    <div class="container">
+        <div class="box">
+            <h2>📊 All Sensor Readings</h2>
+            <div class="sensor-scroll">
+                {% if sensors %}
+                    {% for sensor in sensors %}
+                        <div class="sensor-entry">
+                            <div class="filename">{{ sensor.filename }}</div>
+                            {% for key, value in sensor.data.items() %}
+                                <div class="kv"><strong>{{ key }}:</strong> {{ value }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No sensor data available.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+
+        <div class="box">
+            <h2>🎧 Latest Audio Prediction</h2>
+            {% if prediction %}
+                {% for key, value in prediction.items() %}
+                    <div class="kv"><strong>{{ key }}:</strong> {{ value }}</div>
+                {% endfor %}
+            {% else %}
+                <p>No prediction available.</p>
+            {% endif %}
+
+            {% if warning %}
+                <div class="box warning-box">
+                    <h2>⚠️ Warning!</h2>
+                    <img src="{{ url_for('static', filename='crow.gif') }}" alt="Warning GIF" class="warning-gif" id="warningGif">
+                </div>
+
+            {% endif %}
+
+            <script>
+                // Change 4500 to your GIF's duration in milliseconds
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            </script>
+        </div>
+
+    </div>
+
+</body>
+</html>
